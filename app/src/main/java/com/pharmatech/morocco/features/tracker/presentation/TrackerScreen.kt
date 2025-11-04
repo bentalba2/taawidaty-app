@@ -215,7 +215,7 @@ fun TrackerScreen(
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         LinearProgressIndicator(
-                            progress = progressFraction.coerceIn(0f, 1f),
+                            progress = { progressFraction.coerceIn(0f, 1f) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(8.dp),

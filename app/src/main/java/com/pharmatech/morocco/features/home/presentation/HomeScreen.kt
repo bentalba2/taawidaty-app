@@ -17,13 +17,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.pharmatech.morocco.ui.components.GlassmorphicCard
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.pharmatech.morocco.ui.navigation.Screen
 import com.pharmatech.morocco.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -111,6 +116,15 @@ fun HomeScreen(navController: NavController) {
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
+                        val totalLabel = when (uiState.totalMedications) {
+                            0 -> "No medications today"
+                            1 -> "1 medication today"
+                            else -> "${uiState.totalMedications} medications today"
+                        }
+                        val remainingLabel = when {
+                            uiState.totalMedications == 0 -> "You're all set for the day"
+                            else -> "${uiState.takenCount} taken, ${uiState.remainingCount} remaining"
+                        }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -118,18 +132,49 @@ fun HomeScreen(navController: NavController) {
                         ) {
                             Column {
                                 Text(
-                                    text = "4 medications today",
+                                    text = totalLabel,
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontWeight = FontWeight.SemiBold
                                 )
                                 Text(
-                                    text = "2 taken, 2 remaining",
+                                    text = remainingLabel,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                                 )
+                                uiState.nextMedication?.let { next ->
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Surface(
+                                        shape = RoundedCornerShape(12.dp),
+                                        color = MaterialTheme.colorScheme.secondaryContainer,
+                                        tonalElevation = 0.dp
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 12.dp, vertical = 8.dp)
+                                        ) {
+                                            Text(
+                                                text = "Next dose",
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.75f)
+                                            )
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Text(
+                                                text = "${next.name} • ${next.dosage}",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Medium
+                                            )
+                                            Text(
+                                                text = next.time,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                            )
+                                        }
+                                    }
+                                }
                             }
                             CircularProgressIndicator(
-                                progress = 0.5f,
+                                progress = { uiState.progress.coerceIn(0f, 1f) },
                                 modifier = Modifier.size(48.dp),
                                 color = HealthGreen,
                                 trackColor = MaterialTheme.colorScheme.surfaceVariant
