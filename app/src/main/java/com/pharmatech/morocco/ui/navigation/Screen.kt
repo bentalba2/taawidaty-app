@@ -11,7 +11,15 @@ sealed class Screen(val route: String) {
     object Pharmacy : Screen("pharmacy")
     object Hospital : Screen("hospital")
     object Medication : Screen("medication")
-    object Insurance : Screen("insurance")
+    object Insurance : Screen("insurance?medication={medication}") {
+        fun createRoute(medicationName: String? = null): String {
+            return if (medicationName != null) {
+                "insurance?medication=$medicationName"
+            } else {
+                "insurance"
+            }
+        }
+    }
     object Tracker : Screen("tracker")
     object Profile : Screen("profile")
 

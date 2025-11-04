@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">فارما تك المغرب</string>
+
+    <!-- Common -->
+    <string name="ok">حسنا</string>
+    <string name="cancel">إلغاء</string>
+    <string name="save">حفظ</string>
+    <string name="delete">حذف</string>
+    <string name="edit">تعديل</string>
+    <string name="search">بحث</string>
+    <string name="loading">جاري التحميل…</string>
+    <string name="error">خطأ</string>
+    <string name="retry">إعادة المحاولة</string>
+
+    <!-- Auth -->
+    <string name="login">تسجيل الدخول</string>
+    <string name="register">إنشاء حساب</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="dont_have_account">ليس لديك حساب؟</string>
+    <string name="already_have_account">هل لديك حساب بالفعل؟</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_pharmacy">الصيدليات</string>
+    <string name="nav_hospital">المستشفيات</string>
+    <string name="nav_medication">الأدوية</string>
+    <string name="nav_insurance">التأمين</string>
+    <string name="nav_tracker">المتابعة</string>
+    <string name="nav_profile">الملف الشخصي</string>
+
+    <!-- Medication -->
+    <string name="medication_name">اسم الدواء</string>
+    <string name="dosage">الجرعة</string>
+    <string name="frequency">التكرار</string>
+    <string name="add_medication">إضافة دواء</string>
+    <string name="scan_medication">مسح الدواء</string>
+
+    <!-- Pharmacy -->
+    <string name="find_pharmacy">البحث عن صيدلية</string>
+    <string name="nearby_pharmacies">الصيدليات القريبة</string>
+    <string name="pharmacy_hours">ساعات العمل</string>
+    <string name="pharmacy_24h">24/7</string>
+
+    <!-- Tracker -->
+    <string name="today_medications">أدوية اليوم</string>
+    <string name="adherence_rate">معدل الالتزام</string>
+    <string name="mark_as_taken">تحديد كمأخوذ</string>
+    <string name="skip">تخطي</string>
+
+    <!-- Notifications -->
+    <string name="notification_reminder_title">تذكير بالدواء</string>
+    <string name="notification_reminder_message">حان وقت تناول %1$s</string>
+
+    <!-- Errors -->
+    <string name="error_network">خطأ في الشبكة. يرجى التحقق من اتصالك.</string>
+    <string name="error_generic">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
+    <string name="error_login">البريد الإلكتروني أو كلمة المرور غير صحيحة</string>
+
+    <!-- Language Selector -->
+    <string name="language">اللغة</string>
+    <string name="language_english">English</string>
+    <string name="language_french">Français</string>
+    <string name="language_arabic">العربية</string>
+
+    <!-- Buttons -->
+    <string name="call">اتصال</string>
+    <string name="directions">الاتجاهات</string>
+    <string name="map_view">عرض الخريطة</string>
+    <string name="list_view">عرض القائمة</string>
+    <string name="details">التفاصيل</string>
+    <string name="find">بحث</string>
+    <string name="notifications">الإشعارات</string>
+    <string name="enable_location">تفعيل الموقع</string>
+    <string name="location_permission_title">إذن الموقع</string>
+    <string name="location_permission_message">يحتاج SHIFAA إلى الوصول إلى موقعك للعثور على الصيدليات والمستشفيات القريبة</string>
+    <string name="allow">السماح</string>
+    <string name="not_now">ليس الآن</string>
+
+    <!-- Status -->
+    <string name="open">مفتوح</string>
+    <string name="closed">مغلق</string>
+    <string name="open_now">مفتوح الآن</string>
+
+    <!-- Empty States -->
+    <string name="no_medications">لا توجد أدوية</string>
+    <string name="no_pharmacies">لم يتم العثور على صيدليات</string>
+    <string name="no_notifications">لا توجد إشعارات</string>
+
+    <!-- Medication Form -->
+    <string name="medication_form_title">إضافة دواء</string>
+    <string name="medication_name_required">اسم الدواء مطلوب</string>
+    <string name="frequency_once_daily">مرة واحدة في اليوم</string>
+    <string name="frequency_twice_daily">مرتين في اليوم</string>
+    <string name="frequency_three_times_daily">ثلاث مرات في اليوم</string>
+    <string name="frequency_as_needed">حسب الحاجة</string>
+    <string name="start_date">تاريخ البدء</string>
+    <string name="select_time">اختر الوقت</string>
+
+    <!-- Error Messages -->
+    <string name="phone_not_available">رقم الهاتف غير متوفر</string>
+    <string name="location_not_available">الموقع غير متوفر</string>
+    <string name="no_dialer_app">لم يتم العثور على تطبيق هاتف</string>
+    <string name="no_maps_app">لم يتم العثور على تطبيق خرائط</string>
+</resources>

@@ -25,8 +25,7 @@ interface ApiService {
         @Query("lat") latitude: Double,
         @Query("lng") longitude: Double,
         @Query("radius") radius: Int = 5000, // meters
-        @Query("is24h") is24Hours: Boolean? = null,
-        @Query("hasDelivery") hasDelivery: Boolean? = null
+        @Query("is24h") is24Hours: Boolean? = null
     ): Response<List<PharmacyResponse>>
 
     @GET("pharmacies/{id}")

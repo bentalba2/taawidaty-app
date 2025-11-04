@@ -81,8 +81,6 @@ data class PharmacyResponse(
     val website: String? = null,
     val openingHours: String,
     val is24Hours: Boolean = false,
-    val hasDelivery: Boolean = false,
-    val hasOnlineOrdering: Boolean = false,
     val hasParking: Boolean = false,
     val isGuardPharmacy: Boolean = false,
     val rating: Double = 0.0,

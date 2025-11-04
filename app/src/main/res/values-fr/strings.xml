@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PharmaTech Maroc</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="save">Enregistrer</string>
+    <string name="delete">Supprimer</string>
+    <string name="edit">Modifier</string>
+    <string name="search">Rechercher</string>
+    <string name="loading">Chargement…</string>
+    <string name="error">Erreur</string>
+    <string name="retry">Réessayer</string>
+
+    <!-- Auth -->
+    <string name="login">Connexion</string>
+    <string name="register">S\'inscrire</string>
+    <string name="logout">Déconnexion</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="forgot_password">Mot de passe oublié?</string>
+    <string name="dont_have_account">Vous n\'avez pas de compte?</string>
+    <string name="already_have_account">Vous avez déjà un compte?</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Accueil</string>
+    <string name="nav_pharmacy">Pharmacies</string>
+    <string name="nav_hospital">Hôpitaux</string>
+    <string name="nav_medication">Médicaments</string>
+    <string name="nav_insurance">Assurance</string>
+    <string name="nav_tracker">Suivi</string>
+    <string name="nav_profile">Profil</string>
+
+    <!-- Medication -->
+    <string name="medication_name">Nom du médicament</string>
+    <string name="dosage">Dosage</string>
+    <string name="frequency">Fréquence</string>
+    <string name="add_medication">Ajouter un médicament</string>
+    <string name="scan_medication">Scanner un médicament</string>
+
+    <!-- Pharmacy -->
+    <string name="find_pharmacy">Trouver une pharmacie</string>
+    <string name="nearby_pharmacies">Pharmacies à proximité</string>
+    <string name="pharmacy_hours">Heures d\'ouverture</string>
+    <string name="pharmacy_24h">24/7</string>
+
+    <!-- Tracker -->
+    <string name="today_medications">Médicaments d\'aujourd\'hui</string>
+    <string name="adherence_rate">Taux d\'adhésion</string>
+    <string name="mark_as_taken">Marquer comme pris</string>
+    <string name="skip">Passer</string>
+
+    <!-- Notifications -->
+    <string name="notification_reminder_title">Rappel de médicament</string>
+    <string name="notification_reminder_message">Il est temps de prendre votre %1$s</string>
+
+    <!-- Errors -->
+    <string name="error_network">Erreur réseau. Veuillez vérifier votre connexion.</string>
+    <string name="error_generic">Une erreur s\'est produite. Veuillez réessayer.</string>
+    <string name="error_login">Email ou mot de passe invalide</string>
+
+    <!-- Language Selector -->
+    <string name="language">Langue</string>
+    <string name="language_english">English</string>
+    <string name="language_french">Français</string>
+    <string name="language_arabic">العربية</string>
+
+    <!-- Buttons -->
+    <string name="call">Appeler</string>
+    <string name="directions">Directions</string>
+    <string name="map_view">Vue carte</string>
+    <string name="list_view">Vue liste</string>
+    <string name="details">Détails</string>
+    <string name="find">Trouver</string>
+    <string name="notifications">Notifications</string>
+    <string name="enable_location">Activer la localisation</string>
+    <string name="location_permission_title">Permission de localisation</string>
+    <string name="location_permission_message">SHIFAA a besoin d\'accéder à votre position pour trouver les pharmacies et hôpitaux à proximité</string>
+    <string name="allow">Autoriser</string>
+    <string name="not_now">Pas maintenant</string>
+
+    <!-- Status -->
+    <string name="open">Ouvert</string>
+    <string name="closed">Fermé</string>
+    <string name="open_now">Ouvert maintenant</string>
+
+    <!-- Empty States -->
+    <string name="no_medications">Aucun médicament</string>
+    <string name="no_pharmacies">Aucune pharmacie trouvée</string>
+    <string name="no_notifications">Aucune notification</string>
+
+    <!-- Medication Form -->
+    <string name="medication_form_title">Ajouter un médicament</string>
+    <string name="medication_name_required">Le nom du médicament est requis</string>
+    <string name="frequency_once_daily">Une fois par jour</string>
+    <string name="frequency_twice_daily">Deux fois par jour</string>
+    <string name="frequency_three_times_daily">Trois fois par jour</string>
+    <string name="frequency_as_needed">Au besoin</string>
+    <string name="start_date">Date de début</string>
+    <string name="select_time">Sélectionner l\'heure</string>
+
+    <!-- Error Messages -->
+    <string name="phone_not_available">Numéro de téléphone non disponible</string>
+    <string name="location_not_available">Position non disponible</string>
+    <string name="no_dialer_app">Aucune application de composition trouvée</string>
+    <string name="no_maps_app">Aucune application de cartes trouvée</string>
+</resources>

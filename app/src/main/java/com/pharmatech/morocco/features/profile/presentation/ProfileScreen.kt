@@ -1,5 +1,6 @@
 ﻿package com.pharmatech.morocco.features.profile.presentation
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,17 +15,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.pharmatech.morocco.core.utils.LanguagePreferenceManager
 import com.pharmatech.morocco.features.profile.domain.model.GuestProfile
 import com.pharmatech.morocco.features.profile.domain.model.UserProfile
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val languageManager = remember { LanguagePreferenceManager(context) }
+    val currentLanguage by languageManager.languageFlow.collectAsState(initial = LanguagePreferenceManager.LANGUAGE_FRENCH)
+    
     var userProfile by remember { mutableStateOf(GuestProfile.create("Kénitra")) }
     var showCreateAccountDialog by remember { mutableStateOf(false) }
     
@@ -124,6 +133,71 @@ fun ProfileScreen(navController: NavController) {
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Se déconnecter")
                             }
+                        }
+                    }
+                }
+            }
+            
+            // Language Selection Card
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.Language,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "🌐 Language / اللغة",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            LanguageOption(
+                                label = "🇬🇧 English",
+                                languageCode = LanguagePreferenceManager.LANGUAGE_ENGLISH,
+                                currentLanguage = currentLanguage,
+                                onClick = {
+                                    scope.launch {
+                                        languageManager.setLanguage(it)
+                                        (context as? Activity)?.recreate()
+                                    }
+                                }
+                            )
+                            
+                            LanguageOption(
+                                label = "🇫🇷 Français",
+                                languageCode = LanguagePreferenceManager.LANGUAGE_FRENCH,
+                                currentLanguage = currentLanguage,
+                                onClick = {
+                                    scope.launch {
+                                        languageManager.setLanguage(it)
+                                        (context as? Activity)?.recreate()
+                                    }
+                                }
+                            )
+                            
+                            LanguageOption(
+                                label = "🇸🇦 العربية",
+                                languageCode = LanguagePreferenceManager.LANGUAGE_ARABIC,
+                                currentLanguage = currentLanguage,
+                                onClick = {
+                                    scope.launch {
+                                        languageManager.setLanguage(it)
+                                        (context as? Activity)?.recreate()
+                                    }
+                                }
+                            )
                         }
                     }
                 }
@@ -240,6 +314,56 @@ fun QuickActionItem(title: String, icon: ImageVector) {
                 modifier = Modifier.weight(1f)
             )
             Icon(Icons.Default.ChevronRight, contentDescription = null)
+        }
+    }
+}
+
+@Composable
+fun LanguageOption(
+    label: String,
+    languageCode: String,
+    currentLanguage: String,
+    onClick: (String) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(languageCode) },
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (currentLanguage == languageCode) 
+                MaterialTheme.colorScheme.primaryContainer 
+            else 
+                MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = currentLanguage == languageCode,
+                onClick = { onClick(languageCode) },
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = MaterialTheme.colorScheme.primary
+                )
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = if (currentLanguage == languageCode) FontWeight.Bold else FontWeight.Normal,
+                modifier = Modifier.weight(1f)
+            )
+            if (currentLanguage == languageCode) {
+                Icon(
+                    Icons.Default.Check,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.pharmatech.morocco.features.pharmacy.presentation
 
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,7 +33,6 @@ data class Pharmacy(
     val phone: String,
     val isOpen: Boolean,
     val isOnCall: Boolean,
-    val hasDelivery: Boolean,
     val distance: Double,
     val rating: Float
 )
@@ -51,7 +54,6 @@ fun PharmacyScreen(navController: NavController) {
                 phone = "+212 522 123 456",
                 isOpen = true,
                 isOnCall = true,
-                hasDelivery = true,
                 distance = 0.5,
                 rating = 4.5f
             ),
@@ -63,7 +65,6 @@ fun PharmacyScreen(navController: NavController) {
                 phone = "+212 522 234 567",
                 isOpen = true,
                 isOnCall = false,
-                hasDelivery = true,
                 distance = 1.2,
                 rating = 4.8f
             ),
@@ -75,7 +76,6 @@ fun PharmacyScreen(navController: NavController) {
                 phone = "+212 522 345 678",
                 isOpen = true,
                 isOnCall = true,
-                hasDelivery = false,
                 distance = 2.1,
                 rating = 4.3f
             ),
@@ -87,7 +87,6 @@ fun PharmacyScreen(navController: NavController) {
                 phone = "+212 537 456 789",
                 isOpen = false,
                 isOnCall = false,
-                hasDelivery = true,
                 distance = 3.5,
                 rating = 4.6f
             ),
@@ -99,7 +98,6 @@ fun PharmacyScreen(navController: NavController) {
                 phone = "+212 524 567 890",
                 isOpen = true,
                 isOnCall = false,
-                hasDelivery = true,
                 distance = 4.2,
                 rating = 4.7f
             )
@@ -113,7 +111,6 @@ fun PharmacyScreen(navController: NavController) {
         val matchesFilter = when (selectedFilter) {
             "Open" -> pharmacy.isOpen
             "On Call" -> pharmacy.isOnCall
-            "Delivery" -> pharmacy.hasDelivery
             else -> true
         }
         matchesSearch && matchesFilter
@@ -208,14 +205,6 @@ fun PharmacyScreen(navController: NavController) {
                             { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
                         } else null
                     )
-                    FilterChip(
-                        selected = selectedFilter == "Delivery",
-                        onClick = { selectedFilter = "Delivery" },
-                        label = { Text("Delivery") },
-                        leadingIcon = if (selectedFilter == "Delivery") {
-                            { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                        } else null
-                    )
                 }
             }
 
@@ -258,15 +247,17 @@ fun PharmacyScreen(navController: NavController) {
 
 @Composable
 fun PharmacyCard(pharmacy: Pharmacy) {
+    val context = LocalContext.current
+    
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(20.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -276,15 +267,15 @@ fun PharmacyCard(pharmacy: Pharmacy) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = pharmacy.name,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Default.LocationOn,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp),
+                            modifier = Modifier.size(18.dp),
                             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -335,13 +326,6 @@ fun PharmacyCard(pharmacy: Pharmacy) {
                             color = ShifaaColors.Gold
                         )
                     }
-                    if (pharmacy.hasDelivery) {
-                        StatusChip(
-                            text = "Delivery",
-                            icon = Icons.Default.DeliveryDining,
-                            color = ShifaaColors.PharmacyGreen
-                        )
-                    }
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -367,7 +351,20 @@ fun PharmacyCard(pharmacy: Pharmacy) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Call */ },
+                    onClick = {
+                        try {
+                            val intent = Intent(Intent.ACTION_DIAL).apply {
+                                data = Uri.parse("tel:${pharmacy.phone}")
+                            }
+                            context.startActivity(intent)
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                context,
+                                "Unable to open dialer",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(
@@ -379,7 +376,32 @@ fun PharmacyCard(pharmacy: Pharmacy) {
                     Text("Call")
                 }
                 Button(
-                    onClick = { /* TODO: Directions */ },
+                    onClick = {
+                        try {
+                            // For now, use hardcoded coordinates from PharmacyData.kenitiraPharmacy
+                            // In real implementation, these would come from pharmacy.latitude/longitude
+                            val latitude = 34.24532545335408
+                            val longitude = -6.5984582249030925
+                            val geoUri = Uri.parse("geo:$latitude,$longitude?q=${Uri.encode(pharmacy.name)}")
+                            val intent = Intent(Intent.ACTION_VIEW, geoUri)
+                            intent.setPackage("com.google.android.apps.maps")
+                            
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                // Fallback to browser if Google Maps not installed
+                                val browserIntent = Intent(Intent.ACTION_VIEW, geoUri)
+                                browserIntent.setPackage(null)
+                                context.startActivity(browserIntent)
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                context,
+                                "Unable to open maps",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(

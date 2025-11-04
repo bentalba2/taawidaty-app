@@ -60,14 +60,12 @@ class MockDataGenerator @Inject constructor(
                 website = "https://pharmacie-centrale.ma",
                 openingHours = "Mon-Sat: 8:00-20:00, Sun: 9:00-13:00",
                 is24Hours = false,
-                hasDelivery = true,
-                hasOnlineOrdering = true,
                 hasParking = true,
                 isGuardPharmacy = false,
                 rating = 4.5,
                 reviewCount = 127,
                 imageUrl = null,
-                services = listOf("Delivery", "Online Ordering", "Consultation", "Vaccination"),
+                services = listOf("Consultation", "Vaccination"),
                 lastUpdated = Date()
             ),
             PharmacyEntity(
@@ -84,14 +82,12 @@ class MockDataGenerator @Inject constructor(
                 website = null,
                 openingHours = "24/7",
                 is24Hours = true,
-                hasDelivery = true,
-                hasOnlineOrdering = false,
                 hasParking = false,
                 isGuardPharmacy = true,
                 rating = 4.8,
                 reviewCount = 243,
                 imageUrl = null,
-                services = listOf("24h Service", "Emergency Care", "Delivery"),
+                services = listOf("24h Service", "Emergency Care"),
                 lastUpdated = Date()
             ),
             PharmacyEntity(
@@ -108,8 +104,6 @@ class MockDataGenerator @Inject constructor(
                 website = null,
                 openingHours = "Mon-Fri: 9:00-19:00, Sat: 9:00-13:00",
                 is24Hours = false,
-                hasDelivery = false,
-                hasOnlineOrdering = false,
                 hasParking = true,
                 isGuardPharmacy = false,
                 rating = 4.2,
@@ -132,14 +126,12 @@ class MockDataGenerator @Inject constructor(
                 website = null,
                 openingHours = "Mon-Sat: 8:30-20:30",
                 is24Hours = false,
-                hasDelivery = true,
-                hasOnlineOrdering = false,
                 hasParking = false,
                 isGuardPharmacy = false,
                 rating = 4.0,
                 reviewCount = 89,
                 imageUrl = null,
-                services = listOf("Delivery", "Consultation"),
+                services = listOf("Consultation"),
                 lastUpdated = Date()
             ),
             PharmacyEntity(
@@ -156,14 +148,12 @@ class MockDataGenerator @Inject constructor(
                 website = "https://pharmacie-moderne.ma",
                 openingHours = "Mon-Sun: 8:00-22:00",
                 is24Hours = false,
-                hasDelivery = true,
-                hasOnlineOrdering = true,
                 hasParking = true,
                 isGuardPharmacy = false,
                 rating = 4.6,
                 reviewCount = 178,
                 imageUrl = null,
-                services = listOf("Delivery", "Online Ordering", "Consultation", "Lab Tests"),
+                services = listOf("Consultation", "Lab Tests"),
                 lastUpdated = Date()
             )
         )
