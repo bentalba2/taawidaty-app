@@ -1,5 +1,6 @@
 package com.pharmatech.morocco.core.network
 
+import com.pharmatech.morocco.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
@@ -22,6 +23,11 @@ class AuthInterceptor : Interceptor {
         requestBuilder
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
+
+        if (BuildConfig.AI_API_KEY.isNotBlank()) {
+            // Provide header required by symptom checker backend when key configured
+            requestBuilder.addHeader("x-api-key", BuildConfig.AI_API_KEY)
+        }
 
         val request = requestBuilder.build()
         Timber.d("API Request: ${request.method} ${request.url}")

@@ -32,7 +32,7 @@
      - Google Cloud Console project
      - Enable Maps SDK for Android
      - Create API key with restrictions
-     - Add to `gradle.properties`: `MAPS_API_KEY=your_key_here`
+    - Add to `local.properties`: `MAPS_API_KEY=your_key_here` (do not commit)
 
 #### 2. **Firebase Services** (Currently Configured)
    - **Firebase Authentication**: User login/registration

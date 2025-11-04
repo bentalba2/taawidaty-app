@@ -12,6 +12,8 @@ import com.pharmatech.morocco.core.database.PharmaTechDatabase
 import com.pharmatech.morocco.core.network.ApiService
 import com.pharmatech.morocco.core.network.AuthInterceptor
 import com.pharmatech.morocco.core.utils.NetworkMonitor
+import com.pharmatech.morocco.features.tracker.data.repository.TrackerStateRepositoryImpl
+import com.pharmatech.morocco.features.tracker.domain.repository.TrackerStateRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +25,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import kotlinx.serialization.json.Json
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -104,6 +107,13 @@ object AppModule {
         return NetworkMonitor(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
+
     // DAO Providers
     @Provides
     @Singleton
@@ -136,5 +146,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideHealthInsightDao(database: PharmaTechDatabase) = database.insightDao()
+
+    @Provides
+    @Singleton
+    fun provideTrackerStateRepository(
+        impl: TrackerStateRepositoryImpl
+    ): TrackerStateRepository = impl
 }
 

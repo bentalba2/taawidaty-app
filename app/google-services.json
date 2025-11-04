@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "123456789012",
-    "project_id": "pharmatech-morocco",
-    "storage_bucket": "pharmatech-morocco.appspot.com"
+    "project_number": "4993029381",
+    "project_id": "shifaa-1",
+    "storage_bucket": "shifaa-1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:123456789012:android:abcdef123456",
+        "mobilesdk_app_id": "1:4993029381:android:96e2edba6b7949fe8e536c",
         "android_client_info": {
           "package_name": "com.pharmatech.morocco"
         }
@@ -15,7 +15,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDummyKeyForLocalDevelopment123456789"
+          "current_key": "AIzaSyAU2I9aCqh_MCng-gvZPxCyNcUAWzp2zlU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4993029381:android:6e574e5ff6a72d428e536c",
+        "android_client_info": {
+          "package_name": "om.pharmatech.morocco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU2I9aCqh_MCng-gvZPxCyNcUAWzp2zlU"
         }
       ],
       "services": {
@@ -27,4 +46,3 @@
   ],
   "configuration_version": "1"
 }
-

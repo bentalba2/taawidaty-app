@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c14cde76d44b0eeb751553f2674b5f1b",
+    "identityHash": "0a1d31899397153d8320187913101780",
     "entities": [
       {
         "tableName": "users",
@@ -110,7 +110,7 @@
       },
       {
         "tableName": "pharmacies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `nameAr` TEXT, `address` TEXT NOT NULL, `addressAr` TEXT, `city` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `phoneNumber` TEXT NOT NULL, `email` TEXT, `website` TEXT, `openingHours` TEXT NOT NULL, `is24Hours` INTEGER NOT NULL, `hasDelivery` INTEGER NOT NULL, `hasOnlineOrdering` INTEGER NOT NULL, `hasParking` INTEGER NOT NULL, `isGuardPharmacy` INTEGER NOT NULL, `rating` REAL NOT NULL, `reviewCount` INTEGER NOT NULL, `imageUrl` TEXT, `services` TEXT NOT NULL, `lastUpdated` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `nameAr` TEXT, `address` TEXT NOT NULL, `addressAr` TEXT, `city` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `phoneNumber` TEXT NOT NULL, `email` TEXT, `website` TEXT, `openingHours` TEXT NOT NULL, `is24Hours` INTEGER NOT NULL, `hasParking` INTEGER NOT NULL, `isGuardPharmacy` INTEGER NOT NULL, `rating` REAL NOT NULL, `reviewCount` INTEGER NOT NULL, `imageUrl` TEXT, `services` TEXT NOT NULL, `lastUpdated` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -187,18 +187,6 @@
           {
             "fieldPath": "is24Hours",
             "columnName": "is24Hours",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hasDelivery",
-            "columnName": "hasDelivery",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hasOnlineOrdering",
-            "columnName": "hasOnlineOrdering",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -816,7 +804,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c14cde76d44b0eeb751553f2674b5f1b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a1d31899397153d8320187913101780')"
     ]
   }
 }

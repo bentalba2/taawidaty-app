@@ -1,39 +1,118 @@
 package com.pharmatech.morocco.features.medication.domain.model
 
+import androidx.room.Embedded
+import com.google.gson.annotations.SerializedName
+
 /**
- * Medication Data Model
- * Represents a pharmaceutical product in Morocco
+ * Medication Data Model - Complete Moroccan Pharmaceutical Database
+ * Source: allmeds.json (4,678 medications with CNSS & CNOPS reimbursement)
+ * 
+ * @property name Commercial medication name
+ * @property dci Active ingredient (DCI - Dénomination Commune Internationale)
+ * @property dosage Medication dosage (e.g., "1000 MG")
+ * @property forme Pharmaceutical form (e.g., "COMPRIME", "SIROP")
+ * @property presentation Packaging description
+ * @property publicPrice Public sale price (PPV) in MAD
+ * @property prixBr Base reimbursement reference price in MAD
+ * @property type "Princeps" (brand) or "Générique" (generic)
+ * @property cnss CNSS insurance reimbursement details
+ * @property cnops CNOPS insurance reimbursement details
  */
 data class Medication(
-    val id: String,
     val name: String,
-    val nameAr: String? = null,
+    val dci: String,
     val dosage: String,
-    val pharmaceuticalForm: String,
-    val composition: String,
-    val therapeuticClass: TherapeuticClass,
-    val packSize: String,
-    val ppv: Double, // Public Price including VAT (Prix Public TTC)
-    val priceHospital: Double? = null,
-    val priceWholesaler: Double? = null,
-    val manufacturer: String,
-    val distributor: String,
-    val country: String = "Morocco",
-    val barcode: String? = null,
-    val isNew: Boolean = false,
-    val registrationNumber: String? = null,
-    val indications: String,
-    val contraindications: String? = null,
-    val posology: String? = null,
-    val sideEffects: String? = null,
-    val interactions: String? = null,
-    val warnings: String? = null,
-    val storageConditions: String? = null,
-    val prescriptionRequired: Boolean = true,
-    val isGeneric: Boolean = false,
-    val referenceProductId: String? = null,
-    val imageUrl: String? = null
+    val forme: String,
+    val presentation: String,
+    
+    @SerializedName("publicPrice")
+    val publicPrice: Double,
+    
+    @SerializedName("prix_br")
+    val prixBr: Double,
+    
+    val type: String,
+    
+    @Embedded(prefix = "cnss_")
+    val cnss: InsuranceReimbursement,
+    
+    @Embedded(prefix = "cnops_")
+    val cnops: InsuranceReimbursement
+) {
+    /**
+     * Get reimbursement info for specified insurance type
+     */
+    fun getReimbursementFor(insuranceType: InsuranceType): InsuranceReimbursement {
+        return when (insuranceType) {
+            InsuranceType.CNSS -> cnss
+            InsuranceType.CNOPS -> cnops
+        }
+    }
+    
+    /**
+     * Check if medication is reimbursable for specified insurance
+     */
+    fun isReimbursable(insuranceType: InsuranceType): Boolean {
+        return getReimbursementFor(insuranceType).reimbursementRate > 0
+    }
+    
+    /**
+     * Get French description combining DCI and pharmaceutical form
+     */
+    fun getDescription(): String {
+        return buildString {
+            if (dci.isNotBlank()) {
+                append(dci.lowercase().replaceFirstChar { it.uppercase() })
+                if (dosage.isNotBlank()) {
+                    append(" $dosage")
+                }
+            }
+            if (forme.isNotBlank()) {
+                if (isNotEmpty()) append(" - ")
+                append(forme.lowercase().replaceFirstChar { it.uppercase() })
+            }
+        }
+    }
+    
+    /**
+     * Check if this is a generic medication
+     */
+    fun isGeneric(): Boolean = type.equals("Générique", ignoreCase = true)
+    
+    /**
+     * Check if this is a brand medication (Princeps)
+     */
+    fun isPrinceps(): Boolean = type.equals("Princeps", ignoreCase = true)
+}
+
+/**
+ * Insurance reimbursement information
+ */
+data class InsuranceReimbursement(
+    val reimbursementRate: Int,           // Percentage (0-100)
+    val reimbursementAmount: Double,      // Amount reimbursed in MAD
+    val patientPays: Double               // Amount patient must pay in MAD
 )
+
+/**
+ * Insurance type for reimbursement calculation
+ */
+enum class InsuranceType(val displayName: String, val displayNameAr: String) {
+    CNSS("CNSS - Secteur Privé", "الصندوق الوطني للضمان الاجتماعي"),
+    CNOPS("CNOPS - Secteur Public", "الصندوق الوطني للمنظمات الاجتماعية")
+}
+
+/**
+ * Search result with match information
+ */
+data class MedicationSearchResult(
+    val medication: Medication,
+    val matchScore: Int = 0,               // Higher = better match
+    val matchedField: String = ""          // Which field matched (name, dci, etc.)
+)
+
+// Old models below - kept for compatibility during migration
+// TODO: Remove after full migration to new data structure
 
 /**
  * Therapeutic Classification System
@@ -52,141 +131,4 @@ enum class TherapeuticClass(val displayName: String, val displayNameAr: String) 
     OPHTHALMOLOGY("Ophtalmologie", "طب العيون"),
     VITAMINS("Vitamines et Minéraux", "الفيتامينات والمعادن"),
     OTHER("Autre", "أخرى")
-}
-
-/**
- * Medication Database
- * Static repository of medications (can be replaced with API/Room DB later)
- */
-object MedicationDatabase {
-    
-    /**
-     * COTAREG - Valsartan + Hydrochlorothiazide
-     * Antihypertensive combination
-     */
-    private val cotareg = Medication(
-        id = "med_cotareg_160_12_5",
-        name = "COTAREG 160 MG / 12,5 MG",
-        nameAr = "كوتاريج 160 مغ / 12,5 مغ",
-        dosage = "160 mg / 12,5 mg",
-        pharmaceuticalForm = "Comprimé pelliculé",
-        composition = "Valsartan 160 mg + Hydrochlorothiazide 12,5 mg",
-        therapeuticClass = TherapeuticClass.CARDIOVASCULAR,
-        packSize = "28 comprimés",
-        ppv = 145.20,
-        priceHospital = 90.70,
-        priceWholesaler = 116.00,
-        manufacturer = "Novartis Pharma AG, Suisse",
-        distributor = "NOVARTIS PHARMA MAROC",
-        country = "Morocco",
-        barcode = "6111111111111",
-        isNew = true,
-        registrationNumber = "B-17456",
-        indications = """
-            Traitement de l'hypertension artérielle essentielle.
-            
-            COTAREG est une association fixe de valsartan et d'hydrochlorothiazide. L'association fixe est indiquée chez les patients dont la pression artérielle n'est pas suffisamment contrôlée par le valsartan ou l'hydrochlorothiazide en monothérapie.
-            
-            COTAREG 160 mg/12,5 mg peut être utilisé chez les patients dont la pression artérielle n'est pas suffisamment contrôlée par COTAREG 160 mg/12,5 mg.
-        """.trimIndent(),
-        contraindications = """
-            - Hypersensibilité aux substances actives ou à l'un des excipients
-            - Insuffisance hépatique sévère, cirrhose biliaire et cholestase
-            - Insuffisance rénale sévère (clairance de la créatinine < 30 ml/min)
-            - Anurie
-            - Hypokaliémie ou hypercalcémie réfractaires au traitement
-            - Grossesse (2ème et 3ème trimestres)
-            - Allaitement
-        """.trimIndent(),
-        posology = """
-            La dose recommandée est d'un comprimé par jour.
-            
-            L'effet antihypertenseur est largement obtenu dans les 2 semaines suivant l'instauration du traitement et l'effet maximal est atteint après 4 semaines.
-            
-            Lorsqu'un contrôle supplémentaire de la pression artérielle est nécessaire, la dose peut être augmentée à 160 mg/25 mg (1 comprimé de COTAREG 160 mg/25 mg) ou à 320 mg/12,5 mg (1 comprimé de COTAREG 320 mg/12,5 mg) ou à 320 mg/25 mg (1 comprimé de COTAREG 320 mg/25 mg).
-        """.trimIndent(),
-        sideEffects = """
-            Effets indésirables fréquents (≥1/100, <1/10):
-            - Vertiges
-            - Fatigue
-            - Hypotension (y compris hypotension orthostatique)
-            
-            Effets indésirables peu fréquents (≥1/1000, <1/100):
-            - Toux
-            - Diarrhée
-            - Nausées
-            - Hypokaliémie
-            - Hyperuricémie
-            - Augmentation de la créatininémie
-        """.trimIndent(),
-        interactions = """
-            Interactions nécessitant une précaution d'emploi:
-            - Anti-inflammatoires non stéroïdiens (AINS)
-            - Lithium
-            - Autres antihypertenseurs
-            - Médicaments hyperkaliémiants
-            - Médicaments hypokaliémiants
-            
-            Associations déconseillées:
-            - Aliskiren chez les patients diabétiques ou insuffisants rénaux
-        """.trimIndent(),
-        warnings = """
-            Mises en garde spéciales:
-            - Surveillance de la fonction rénale
-            - Surveillance des électrolytes (potassium, sodium)
-            - Risque d'hypotension chez les patients présentant une déplétion volémique
-            - Déséquilibre électrolytique
-            - Grossesse: arrêt immédiat en cas de grossesse
-        """.trimIndent(),
-        storageConditions = "À conserver à une température ne dépassant pas 30°C. Conserver dans l'emballage d'origine.",
-        prescriptionRequired = true,
-        isGeneric = false,
-        referenceProductId = null,
-        imageUrl = null
-    )
-    
-    /**
-     * Get all medications
-     * Returns list of all available medications
-     */
-    fun getAllMedications(): List<Medication> {
-        return listOf(cotareg)
-    }
-    
-    /**
-     * Search medications by name or composition
-     */
-    fun searchMedications(query: String): List<Medication> {
-        if (query.isBlank()) return getAllMedications()
-        
-        val searchQuery = query.lowercase().trim()
-        return getAllMedications().filter { medication ->
-            medication.name.lowercase().contains(searchQuery) ||
-            medication.composition.lowercase().contains(searchQuery) ||
-            medication.manufacturer.lowercase().contains(searchQuery) ||
-            medication.distributor.lowercase().contains(searchQuery) ||
-            medication.therapeuticClass.displayName.lowercase().contains(searchQuery)
-        }
-    }
-    
-    /**
-     * Get medication by ID
-     */
-    fun getMedicationById(id: String): Medication? {
-        return getAllMedications().find { it.id == id }
-    }
-    
-    /**
-     * Get medications by therapeutic class
-     */
-    fun getMedicationsByClass(therapeuticClass: TherapeuticClass): List<Medication> {
-        return getAllMedications().filter { it.therapeuticClass == therapeuticClass }
-    }
-    
-    /**
-     * Get new medications
-     */
-    fun getNewMedications(): List<Medication> {
-        return getAllMedications().filter { it.isNew }
-    }
 }

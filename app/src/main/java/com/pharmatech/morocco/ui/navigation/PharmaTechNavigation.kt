@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.pharmatech.morocco.features.auth.presentation.LoginScreen
 import com.pharmatech.morocco.features.auth.presentation.RegisterScreen
 import com.pharmatech.morocco.features.auth.presentation.SplashScreen
@@ -27,6 +29,9 @@ import com.pharmatech.morocco.features.medication.presentation.MedicationScreen
 import com.pharmatech.morocco.features.insurance.presentation.InsurancePortalScreen
 import com.pharmatech.morocco.features.tracker.presentation.TrackerScreen
 import com.pharmatech.morocco.features.profile.presentation.ProfileScreen
+import com.pharmatech.morocco.features.scanner.presentation.ScannerScreen
+import com.pharmatech.morocco.features.ai.AISymptomCheckerScreen
+import com.pharmatech.morocco.features.ai.HealthInsightsScreen
 import com.pharmatech.morocco.ui.components.BannerAdView
 import com.pharmatech.morocco.ui.theme.ShifaaColors
 
@@ -134,14 +139,40 @@ fun PharmaTechNavigation() {
             composable(Screen.Medication.route) {
                 MedicationScreen(navController = navController)
             }
-            composable(Screen.Insurance.route) {
-                InsurancePortalScreen(navController = navController)
+            composable(
+                route = Screen.Insurance.route,
+                arguments = listOf(
+                    navArgument("medication") {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    }
+                )
+            ) { backStackEntry ->
+                val medicationName = backStackEntry.arguments?.getString("medication")
+                InsurancePortalScreen(
+                    navController = navController,
+                    preSelectedMedication = medicationName
+                )
             }
             composable(Screen.Tracker.route) {
                 TrackerScreen(navController = navController)
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(navController = navController)
+            }
+            
+            // Scanner
+            composable(Screen.Scanner.route) {
+                ScannerScreen(navController = navController)
+            }
+            
+            // AI Features
+            composable(Screen.AISymptomChecker.route) {
+                AISymptomCheckerScreen(navController = navController)
+            }
+            composable(Screen.HealthInsights.route) {
+                HealthInsightsScreen(navController = navController)
             }
         }
     }

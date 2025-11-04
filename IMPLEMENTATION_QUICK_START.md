@@ -14,7 +14,12 @@ Before starting development:
   - Create project at console.cloud.google.com
   - Enable "Maps SDK for Android"
   - Create API key with Android app restrictions
-  - Add to `gradle.properties`: `MAPS_API_KEY=your_key_here`
+  - Add to `local.properties`: `MAPS_API_KEY=your_key_here` (file is not tracked)
+
+- [ ] **AI Symptom Checker Key**: Obtain from Generative AI provider
+  - Secure the key in your secrets manager first
+  - Add to `local.properties`: `AI_API_KEY=your_ai_key_here`
+  - Never commit real keys to Git history
 
 - [ ] **AdMob Account**: Set up at admob.google.com
   - Create AdMob account
@@ -271,9 +276,10 @@ Before starting development:
 - Emulator: Medium Phone API 34 (already configured ✅)
 
 ### Environment Variables
-Add to `gradle.properties`:
+Add to `local.properties` (not tracked by Git):
 ```properties
 MAPS_API_KEY=your_google_maps_api_key_here
+AI_API_KEY=your_ai_service_key_here
 ```
 
 ### Branch Strategy

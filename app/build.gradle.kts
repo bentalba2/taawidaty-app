@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -6,7 +8,27 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
+    kotlin("plugin.serialization") version "1.9.0"
 }
+
+// Load local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+
+fun String.escapeForBuildConfig(): String = this
+    .replace("\\", "\\\\")
+    .replace("\"", "\\\"")
+
+val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY") 
+    ?: (project.findProperty("MAPS_API_KEY") as? String)
+    ?: ""
+
+val aiApiKey: String = localProperties.getProperty("AI_API_KEY")
+    ?: (project.findProperty("AI_API_KEY") as? String)
+    ?: ""
 
 android {
     namespace = "com.pharmatech.morocco"
@@ -31,8 +53,13 @@ android {
         // BuildConfig fields - API Base URL only
         buildConfigField("String", "API_BASE_URL", "\"https://api.pharmatech.ma/v1/\"")
         
-        // Use manifest placeholder for Maps API key (more secure than BuildConfig)
-        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = project.findProperty("MAPS_API_KEY") ?: "YOUR_API_KEY_HERE"
+    // Use manifest placeholder for Maps API key (more secure than BuildConfig)
+    val resolvedMapsKey = if (mapsApiKey.isNotBlank()) mapsApiKey else "YOUR_API_KEY_HERE"
+    manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = resolvedMapsKey
+
+    // Provide AI API key via BuildConfig (safe fallback to empty string)
+    val sanitizedAiKey = if (aiApiKey.isNotBlank()) aiApiKey.escapeForBuildConfig() else ""
+    buildConfigField("String", "AI_API_KEY", "\"$sanitizedAiKey\"")
         
         // Room schema export configuration
         javaCompileOptions {
@@ -139,7 +166,7 @@ dependencies {
     // Image Loading
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    // Firebase
+    // Firebase - Using BoM 32.7.0 (34.5.0 has dependency resolution issues)
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
@@ -174,6 +201,7 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
