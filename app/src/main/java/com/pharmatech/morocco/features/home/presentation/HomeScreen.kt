@@ -1,6 +1,7 @@
 package com.pharmatech.morocco.features.home.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,6 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pharmatech.morocco.ui.components.CountUpInteger
+import com.pharmatech.morocco.ui.components.CountUpPercentage
+import com.pharmatech.morocco.ui.components.PulseButton
+import com.pharmatech.morocco.ui.components.GlassmorphismCard
+import com.pharmatech.morocco.ui.components.GlassElevation
 import com.pharmatech.morocco.ui.navigation.Screen
 import com.pharmatech.morocco.ui.theme.*
 
@@ -116,31 +122,85 @@ fun HomeScreen(
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        val totalLabel = when (uiState.totalMedications) {
-                            0 -> "No medications today"
-                            1 -> "1 medication today"
-                            else -> "${uiState.totalMedications} medications today"
-                        }
-                        val remainingLabel = when {
-                            uiState.totalMedications == 0 -> "You're all set for the day"
-                            else -> "${uiState.takenCount} taken, ${uiState.remainingCount} remaining"
-                        }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text(
-                                    text = totalLabel,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                Text(
-                                    text = remainingLabel,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    CountUpInteger(
+                                        value = uiState.totalMedications,
+                                        textStyle = MaterialTheme.typography.headlineMedium,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        durationMillis = 1000
+                                    )
+                                    Text(
+                                        text = if (uiState.totalMedications == 1) "medication today" else "medications today",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                                
+                                Spacer(modifier = Modifier.height(4.dp))
+                                
+                                if (uiState.totalMedications > 0) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            CountUpInteger(
+                                                value = uiState.takenCount,
+                                                textStyle = MaterialTheme.typography.bodyMedium,
+                                                color = TaawidatyColors.SuccessGreen500,
+                                                durationMillis = 800,
+                                                delayMillis = 200
+                                            )
+                                            Text(
+                                                text = "taken",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                            )
+                                        }
+                                        
+                                        Text(
+                                            text = "•",
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                                        )
+                                        
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            CountUpInteger(
+                                                value = uiState.remainingCount,
+                                                textStyle = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.primary,
+                                                durationMillis = 800,
+                                                delayMillis = 400
+                                            )
+                                            Text(
+                                                text = "remaining",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    Text(
+                                        text = "You're all set for the day",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                    )
+                                }
+                                
                                 uiState.nextMedication?.let { next ->
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Surface(
@@ -173,17 +233,36 @@ fun HomeScreen(
                                     }
                                 }
                             }
-                            CircularProgressIndicator(
-                                progress = { uiState.progress.coerceIn(0f, 1f) },
-                                modifier = Modifier.size(48.dp),
-                                color = HealthGreen,
-                                trackColor = MaterialTheme.colorScheme.surfaceVariant
-                            )
+                            
+                            // Progress indicator with percentage
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    CircularProgressIndicator(
+                                        progress = { uiState.progress.coerceIn(0f, 1f) },
+                                        modifier = Modifier.size(64.dp),
+                                        color = TaawidatyColors.SuccessGreen500,
+                                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                                        strokeWidth = 6.dp
+                                    )
+                                    CountUpPercentage(
+                                        percentage = (uiState.progress * 100).coerceIn(0f, 100f),
+                                        textStyle = MaterialTheme.typography.labelLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        durationMillis = 1200,
+                                        delayMillis = 300,
+                                        decimals = 0
+                                    )
+                                }
+                            }
                         }
                         Spacer(modifier = Modifier.height(12.dp))
-                        Button(
+                        PulseButton(
                             onClick = { navController.navigate(Screen.Tracker.route) },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            pulseEnabled = uiState.remainingCount > 0
                         ) {
                             Text("View All")
                         }
@@ -243,26 +322,26 @@ fun HomeScreen(
             }
 
             item {
-                Card(
+                GlassmorphismCard(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp)
+                    backgroundColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
+                    borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = GlassElevation.Medium
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
+                    Text(
+                        text = "Enable location to find nearby pharmacies",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    PulseButton(
+                        onClick = { /* TODO: Request location permission */ },
+                        modifier = Modifier.fillMaxWidth(),
+                        pulseEnabled = true
                     ) {
-                        Text(
-                            text = "Enable location to find nearby pharmacies",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Button(
-                            onClick = { /* TODO: Request location permission */ },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(Icons.Default.LocationOn, contentDescription = null)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Enable Location")
-                        }
+                        Icon(Icons.Default.LocationOn, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Enable Location")
                     }
                 }
             }
@@ -316,33 +395,41 @@ fun FeatureCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    GlassmorphismCard(
         modifier = modifier,
+        backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+        borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
         shape = RoundedCornerShape(16.dp),
-        onClick = onClick
+        elevation = GlassElevation.Soft,
+        contentPadding = PaddingValues(0.dp)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .padding(16.dp)
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(32.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
         }
     }
 }

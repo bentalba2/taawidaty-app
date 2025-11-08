@@ -20,19 +20,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.pharmatech.morocco.core.datastore.ThemeMode
 import com.pharmatech.morocco.core.utils.LanguagePreferenceManager
 import com.pharmatech.morocco.features.profile.domain.model.GuestProfile
 import com.pharmatech.morocco.features.profile.domain.model.UserProfile
+import com.pharmatech.morocco.ui.components.ThemeToggleSegmented
+import com.pharmatech.morocco.ui.theme.ThemeViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    themeViewModel: ThemeViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val languageManager = remember { LanguagePreferenceManager(context) }
     val currentLanguage by languageManager.languageFlow.collectAsState(initial = LanguagePreferenceManager.LANGUAGE_FRENCH)
+    val currentThemeMode by themeViewModel.themeMode.collectAsState()
     
     var userProfile by remember { mutableStateOf(GuestProfile.create("Kénitra")) }
     var showCreateAccountDialog by remember { mutableStateOf(false) }
@@ -199,6 +207,57 @@ fun ProfileScreen(navController: NavController) {
                                 }
                             )
                         }
+                    }
+                }
+            }
+            
+            // Theme Settings Card
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Palette,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Apparence / المظهر",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        ThemeToggleSegmented(
+                            currentMode = currentThemeMode,
+                            onModeChange = { mode ->
+                                themeViewModel.setThemeMode(mode)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        Text(
+                            text = when (currentThemeMode) {
+                                ThemeMode.SYSTEM -> "Suit le thème de votre appareil"
+                                ThemeMode.LIGHT -> "Mode clair activé"
+                                ThemeMode.DARK -> "Mode sombre activé"
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        )
                     }
                 }
             }

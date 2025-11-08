@@ -11,7 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.pharmatech.morocco.core.utils.LanguagePreferenceManager
-import com.pharmatech.morocco.ui.theme.PharmaTechTheme
+import com.pharmatech.morocco.ui.theme.TaawidatyThemeProvider
 import com.pharmatech.morocco.ui.navigation.PharmaTechNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
@@ -27,18 +27,13 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        // Set status bar appearance for edge-to-edge
-        WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = true // Dark icons for light background
-        }
-
         setContent {
-            PharmaTechTheme {
+            TaawidatyThemeProvider {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // SHIFAA Premium System: 6-tab navigation with Hospital Management & Insurance Portal
+                    // TAAWIDATY: Health companion with medication tracking & health tools
                     PharmaTechNavigation()
                 }
             }

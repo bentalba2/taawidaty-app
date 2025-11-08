@@ -10,6 +10,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pharmatech.morocco.core.datastore.ThemeMode
 
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryGradientStart,
@@ -67,10 +70,43 @@ private val LightColorScheme = lightColorScheme(
     scrim = Color.Black
 )
 
+/**
+ * TaawidatyThemeProvider - Main theme composable with DataStore integration
+ * 
+ * Automatically observes theme preference and applies correct theme.
+ * Supports System/Light/Dark modes with persistent storage.
+ */
 @Composable
-fun PharmaTechTheme(
+fun TaawidatyThemeProvider(
+    themeViewModel: ThemeViewModel = hiltViewModel(),
+    content: @Composable () -> Unit
+) {
+    val themeMode by themeViewModel.themeMode.collectAsStateWithLifecycle()
+    val systemInDarkTheme = isSystemInDarkTheme()
+
+    // Determine if dark theme should be active
+    val darkTheme = when (themeMode) {
+        ThemeMode.SYSTEM -> systemInDarkTheme
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
+
+    TaawidatyTheme(
+        darkTheme = darkTheme,
+        content = content
+    )
+}
+
+/**
+ * TaawidatyTheme - Base theme composable
+ * 
+ * Apply TAAWIDATY color scheme, typography, and shapes.
+ * For direct use when theme preference is handled externally.
+ */
+@Composable
+fun TaawidatyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // Set to false to always use SHIFAA brand colors
+    dynamicColor: Boolean = false, // Set to false to always use TAAWIDATY brand colors
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -78,8 +114,8 @@ fun PharmaTechTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> ShifaaDarkColorScheme
-        else -> ShifaaLightColorScheme
+        darkTheme -> TaawidatyDarkColorScheme
+        else -> TaawidatyLightColorScheme
     }
 
     val view = LocalView.current
@@ -93,9 +129,10 @@ fun PharmaTechTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = ShifaaTypography,
-        shapes = ShifaaShapes,
+        typography = TaawidatyTypography,
+        shapes = TaawidatyShapes,
         content = content
     )
+
 }
 

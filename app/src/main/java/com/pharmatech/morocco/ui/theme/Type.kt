@@ -109,8 +109,8 @@ val PharmaTechTypography = Typography(
     )
 )
 
-// Premium typography for SHIFAA brand
-val ShifaaTypography = Typography(
+// TAAWIDATY Typography - Modern, Professional, Readable
+val TaawidatyTypography = Typography(
     // Display styles - Large headers
     displayLarge = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -211,4 +211,8 @@ val ShifaaTypography = Typography(
         letterSpacing = 0.5.sp
     )
 )
+
+// Legacy compatibility - deprecated
+@Deprecated("Use TaawidatyTypography instead", ReplaceWith("TaawidatyTypography"))
+val ShifaaTypography = TaawidatyTypography
 
