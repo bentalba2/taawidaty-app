@@ -64,8 +64,38 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO: Notifications */ }) {
-                        Icon(Icons.Default.Notifications, contentDescription = "Notifications")
+                    Row {
+                        // Location indicator
+                        if (uiState.locationPermissionGranted && uiState.currentLocation != null) {
+                            IconButton(
+                                onClick = { viewModel.refreshLocation() }
+                            ) {
+                                Icon(
+                                    Icons.Default.LocationOn,
+                                    contentDescription = "Location enabled",
+                                    tint = HealthGreen
+                                )
+                            }
+                        }
+
+                        IconButton(
+                            onClick = {
+                                // Navigate to notifications screen
+                                navController.navigate("notifications")
+                            }
+                        ) {
+                            BadgedBox(
+                                badge = {
+                                    if (uiState.totalMedications > 0 && uiState.remainingCount > 0) {
+                                        Badge {
+                                            Text(uiState.remainingCount.toString())
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(Icons.Default.Notifications, contentDescription = "Notifications")
+                            }
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
