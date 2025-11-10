@@ -225,15 +225,33 @@ object ShifaaExtendedColors {
 }
 
 // ============================================
-// Gradient & UI Colors (Legacy Compatibility)
+// Enhanced Gradient & UI Colors
+// Better Visual Appeal, Modern Design
 // ============================================
 
-val PrimaryGradientStart = TaawidatyColors.TrustBlue400
-val PrimaryGradientEnd = TaawidatyColors.TrustBlue600
-val HealthGreen = TaawidatyColors.SuccessGreen500
-val PremiumGold = TaawidatyColors.PrestigeGold500
-val NeuralDark = TaawidatyColors.DarkBackground
-val ErrorRed = TaawidatyColors.ErrorRed
+// Primary Gradients - Soft and Professional
+val PrimaryGradientStart = Color(0xFF4FC3F7)  // Light blue
+val PrimaryGradientEnd = Color(0xFF0061A4)    // Softer dark blue
+
+// Health Gradients - Calming and Medical
+val HealthGradientStart = Color(0xFF81C784)   // Light green
+val HealthGradientEnd = Color(0xFF2E7D32)     // Medical green
+
+// Premium Gradients - Warm and Elegant
+val PremiumGradientStart = Color(0xFFFFD54F)  // Warm gold
+val PremiumGradientEnd = Color(0xFFB8860B)    // Deep gold
+
+// Semantic Colors with Better Eye Comfort
+val HealthGreen = Color(0xFF2E7D32)           // Medical green
+val PremiumGold = Color(0xFFB8860B)           // Warm gold
+val NeuralDark = Color(0xFF1A237E)            // Soft dark blue
+val ErrorRed = Color(0xFFBA1A1A)              // Softer error red
+
+// Additional UI Colors
+val SurfaceGlass = Color(0xFAFFFFFF)          // Glass morphism white
+val SurfaceOverlay = Color(0x0A000000)        // Subtle overlay
+val AccentBlue = Color(0xFF03A9F4)            // Bright accent
+val SoftGray = Color(0xFFF5F7FA)             // Very light gray
 
 // Neutral Grays (Legacy)
 val Gray100 = TaawidatyColors.Gray100
