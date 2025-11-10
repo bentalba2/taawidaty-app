@@ -176,7 +176,7 @@ fun ProfileScreen(
                         
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             LanguageOption(
-                                label = "🇬🇧 English",
+                                label = "🇬🇧 ${stringResource(id = R.string.language_english)}",
                                 languageCode = LanguagePreference.LANGUAGE_ENGLISH,
                                 currentLanguage = currentLanguage,
                                 onClick = { languageCode ->
@@ -189,7 +189,7 @@ fun ProfileScreen(
                             )
 
                             LanguageOption(
-                                label = "🇫🇷 Français",
+                                label = "🇫🇷 ${stringResource(id = R.string.language_french)}",
                                 languageCode = LanguagePreference.LANGUAGE_FRENCH,
                                 currentLanguage = currentLanguage,
                                 onClick = { languageCode ->
@@ -202,7 +202,7 @@ fun ProfileScreen(
                             )
 
                             LanguageOption(
-                                label = "🇸🇦 العربية",
+                                label = "🇸🇦 ${stringResource(id = R.string.language_arabic)}",
                                 languageCode = LanguagePreference.LANGUAGE_ARABIC,
                                 currentLanguage = currentLanguage,
                                 onClick = { languageCode ->
