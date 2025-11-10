@@ -71,47 +71,47 @@ object TaawidatyColors {
 }
 
 // ============================================
-// Light Theme Color Scheme
-// Clean, Professional, Trust-Inspiring
+// Enhanced Light Theme Color Scheme
+// Eye-Friendly, Better Contrast, Professional
 // ============================================
 
 val TaawidatyLightColorScheme = lightColorScheme(
-    // Primary - Trust Blue
-    primary = TaawidatyColors.TrustBlue500,
+    // Primary - Softer Trust Blue for eye comfort
+    primary = Color(0xFF0061A4),  // Softer blue
     onPrimary = Color.White,
-    primaryContainer = TaawidatyColors.TrustBlue50,
-    onPrimaryContainer = TaawidatyColors.TrustBlue900,
+    primaryContainer = Color(0xFFE3F2FD),  // Light blue container
+    onPrimaryContainer = Color(0xFF001D36),
 
-    // Secondary - Success Green
-    secondary = TaawidatyColors.SuccessGreen500,
+    // Secondary - Calming Green for health
+    secondary = Color(0xFF2E7D32),  // Medical green
     onSecondary = Color.White,
-    secondaryContainer = TaawidatyColors.SuccessGreen50,
-    onSecondaryContainer = TaawidatyColors.SuccessGreen900,
+    secondaryContainer = Color(0xFFE8F5E9),  // Soft green
+    onSecondaryContainer = Color(0xFF0D2F0F),
 
-    // Tertiary - Prestige Gold
-    tertiary = TaawidatyColors.PrestigeGold500,
+    // Tertiary - Warm accent gold
+    tertiary = Color(0xFFB8860B),  // Warm gold
     onTertiary = Color.White,
-    tertiaryContainer = TaawidatyColors.PrestigeGold50,
-    onTertiaryContainer = TaawidatyColors.PrestigeGold900,
+    tertiaryContainer = Color(0xFFFFF8E1),  // Warm cream
+    onTertiaryContainer = Color(0xFF3E2B05),
 
-    // Background & Surface
-    background = Color(0xFFFAFBFC),
-    onBackground = TaawidatyColors.Gray900,
-    surface = Color.White,
-    onSurface = TaawidatyColors.Gray900,
-    surfaceVariant = TaawidatyColors.Gray50,
-    onSurfaceVariant = TaawidatyColors.Gray700,
+    // Background & Surface - Softer on eyes
+    background = Color(0xFFF8FAFB),  // Very light blue-white
+    onBackground = Color(0xFF1C1B1F),  // Soft black
+    surface = Color(0xFFFAFCFE),  // Cool white
+    onSurface = Color(0xFF1C1B1F),  // Consistent text color
+    surfaceVariant = Color(0xFFF0F4F8),  // Light gray-blue
+    onSurfaceVariant = Color(0xFF44474E),  // Softer gray
 
-    // Error
-    error = TaawidatyColors.ErrorRed,
+    // Error - Less harsh red
+    error = Color(0xFFBA1A1A),  // Softer red
     onError = Color.White,
-    errorContainer = Color(0xFFFFF0F1),
-    onErrorContainer = Color(0xFF8B0000),
+    errorContainer = Color(0xFFFFDAD6),  // Light red
+    onErrorContainer = Color(0xFF410002),
 
-    // Outline
-    outline = TaawidatyColors.Gray300,
-    outlineVariant = TaawidatyColors.Gray200,
-    scrim = Color.Black
+    // Outline - Better visibility
+    outline = Color(0xFF73777F),  // Clear outline
+    outlineVariant = Color(0xFFC7C7CE),  // Soft outline
+    scrim = Color(0xFF000000)
 )
 
 // ============================================
