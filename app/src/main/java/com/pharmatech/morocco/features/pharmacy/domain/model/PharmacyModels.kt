@@ -23,7 +23,8 @@ data class Pharmacy(
     val imageUrl: String? = null,
     val services: List<String> = emptyList(),
     val distance: Double? = null, // in meters
-    val lastUpdated: Date
+    val lastUpdated: Date,
+    val geocoded: Boolean = true // Whether coordinates are from real geocoding
 )
 
 data class PharmacyReview(

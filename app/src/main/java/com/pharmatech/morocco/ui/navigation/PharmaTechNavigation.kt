@@ -24,6 +24,7 @@ import com.pharmatech.morocco.features.auth.presentation.RegisterScreen
 import com.pharmatech.morocco.features.auth.presentation.SplashScreen
 import com.pharmatech.morocco.features.home.presentation.HomeScreen
 import com.pharmatech.morocco.features.pharmacy.presentation.PharmacyScreen
+import com.pharmatech.morocco.features.pharmacy.presentation.PharmacyMapScreen
 import com.pharmatech.morocco.features.hospital.presentation.HospitalMapScreen
 import com.pharmatech.morocco.features.medication.presentation.MedicationScreen
 import com.pharmatech.morocco.features.insurance.presentation.InsurancePortalScreen
@@ -132,6 +133,9 @@ fun PharmaTechNavigation() {
             }
             composable(Screen.Pharmacy.route) {
                 PharmacyScreen(navController = navController)
+            }
+            composable(Screen.PharmacyMap.route) {
+                PharmacyMapScreen(navController = navController)
             }
             composable(Screen.Hospital.route) {
                 HospitalMapScreen(navController = navController)
