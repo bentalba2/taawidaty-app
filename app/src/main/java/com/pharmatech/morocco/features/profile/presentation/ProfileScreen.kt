@@ -166,7 +166,7 @@ fun ProfileScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "🌐 Language / اللغة",
+                                text = "🌐 ${stringResource(id = R.string.language)}",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
