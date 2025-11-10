@@ -357,33 +357,187 @@ fun HomeScreen(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
-                    TextButton(onClick = { navController.navigate(Screen.Pharmacy.route) }) {
-                        Text("See All")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (uiState.locationPermissionGranted && uiState.currentLocation != null) {
+                            Text(
+                                text = "Based on your location",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            IconButton(
+                                onClick = { viewModel.refreshLocation() }
+                            ) {
+                                Icon(
+                                    Icons.Default.Refresh,
+                                    contentDescription = "Refresh location",
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        TextButton(onClick = { navController.navigate(Screen.Pharmacy.route) }) {
+                            Text("See All")
+                        }
                     }
                 }
             }
 
-            item {
-                GlassmorphismCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
-                    borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(20.dp),
-                    elevation = GlassElevation.Medium
-                ) {
-                    Text(
-                        text = "Enable location to find nearby pharmacies",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    PulseButton(
-                        onClick = { /* TODO: Request location permission */ },
-                        modifier = Modifier.fillMaxWidth(),
-                        pulseEnabled = true
-                    ) {
-                        Icon(Icons.Default.LocationOn, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Enable Location")
+            // Location-based pharmacy content
+            when {
+                uiState.isLoadingLocation -> {
+                    item {
+                        GlassmorphismCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            backgroundColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
+                            borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(20.dp),
+                            elevation = GlassElevation.Medium
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Text(
+                                    text = "Finding nearby pharmacies...",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+                }
+
+                !uiState.locationPermissionGranted -> {
+                    item {
+                        GlassmorphismCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            backgroundColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
+                            borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(20.dp),
+                            elevation = GlassElevation.Medium
+                        ) {
+                            Text(
+                                text = "Enable location to find nearby pharmacies",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(20.dp)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            PulseButton(
+                                onClick = {
+                                    if (!locationPermissionState.hasFineLocation && !locationPermissionState.hasCoarseLocation) {
+                                        viewModel.requestLocationPermission(context)
+                                    } else {
+                                        viewModel.loadCurrentLocation()
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                pulseEnabled = true
+                            ) {
+                                Icon(Icons.Default.LocationOn, contentDescription = null)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Enable Location")
+                            }
+                        }
+                    }
+                }
+
+                uiState.locationError != null -> {
+                    item {
+                        GlassmorphismCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            backgroundColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.6f),
+                            borderColor = MaterialTheme.colorScheme.error.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(20.dp),
+                            elevation = GlassElevation.Medium
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Warning,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                    Text(
+                                        text = uiState.locationError,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onErrorContainer
+                                    )
+                                }
+                                Button(
+                                    onClick = {
+                                        viewModel.clearLocationError()
+                                        viewModel.loadCurrentLocation()
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Try Again")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                uiState.nearbyPharmacies.isNotEmpty() -> {
+                    items(uiState.nearbyPharmacies) { pharmacy ->
+                        NearbyPharmacyCard(
+                            pharmacy = pharmacy,
+                            onClick = {
+                                navController.navigate("pharmacy_details/${pharmacy.id}")
+                            }
+                        )
+                    }
+                }
+
+                else -> {
+                    item {
+                        GlassmorphismCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                            borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(20.dp),
+                            elevation = GlassElevation.Medium
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.LocalPharmacy,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(48.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                )
+                                Text(
+                                    text = "No nearby pharmacies found",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                TextButton(
+                                    onClick = { navController.navigate(Screen.Pharmacy.route) }
+                                ) {
+                                    Text("Browse All Pharmacies")
+                                }
+                            }
+                        }
                     }
                 }
             }
