@@ -38,8 +38,8 @@ fun ProfileScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val languageManager = remember { LanguagePreferenceManager(context) }
-    val currentLanguage by languageManager.languageFlow.collectAsState(initial = LanguagePreferenceManager.LANGUAGE_FRENCH)
+    val languageManager = remember { LanguagePreference(context) }
+    val currentLanguage by languageManager.languageFlow.collectAsState(initial = LanguagePreference.LANGUAGE_FRENCH)
     val currentThemeMode by themeViewModel.themeMode.collectAsState()
     
     var userProfile by remember { mutableStateOf(GuestProfile.create("Kénitra")) }
