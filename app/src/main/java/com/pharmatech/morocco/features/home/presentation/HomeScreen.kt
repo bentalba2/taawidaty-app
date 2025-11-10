@@ -133,18 +133,18 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    QuickActionCard(
+                    PremiumQuickActionCard(
                         modifier = Modifier.weight(1f),
-                        title = "Scan Medication",
-                        icon = Icons.Default.QrCodeScanner,
+                        title = stringResource(id = R.string.scan_medication),
+                        icon = Icons.Rounded.QrCodeScanner,
                         gradient = listOf(PrimaryGradientStart, PrimaryGradientEnd),
                         onClick = { navController.navigate(Screen.Scanner.route) }
                     )
-                    QuickActionCard(
+                    PremiumQuickActionCard(
                         modifier = Modifier.weight(1f),
-                        title = "Find Pharmacy",
-                        icon = Icons.Default.LocalPharmacy,
-                        gradient = listOf(HealthGreen, Color(0xFF059669)),
+                        title = stringResource(id = R.string.find_pharmacy),
+                        icon = Icons.Rounded.LocalPharmacy,
+                        gradient = listOf(HealthGradientStart, HealthGradientEnd),
                         onClick = { navController.navigate(Screen.Pharmacy.route) }
                     )
                 }
