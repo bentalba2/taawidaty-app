@@ -154,5 +154,16 @@ object AppModule {
     fun provideTrackerStateRepository(
         impl: TrackerStateRepositoryImpl
     ): TrackerStateRepository = impl
+
+    @Provides
+    @Singleton
+    fun provideLocationService(@ApplicationContext context: Context): LocationService {
+        return LocationService(context)
+    }
+
+    @Provides
+    fun provideCameraService(@ApplicationContext context: Context): CameraService {
+        return CameraService(context)
+    }
 }
 
