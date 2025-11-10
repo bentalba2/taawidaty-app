@@ -8,7 +8,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,12 +18,17 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pharmatech.morocco.R
 import com.pharmatech.morocco.core.permissions.rememberLocationPermissionState
+import com.pharmatech.morocco.ui.components.PremiumButton
+import com.pharmatech.morocco.ui.components.PremiumCard
+import com.pharmatech.morocco.ui.components.PremiumButtonVariant
 import com.pharmatech.morocco.ui.components.CountUpInteger
 import com.pharmatech.morocco.ui.components.CountUpPercentage
 import com.pharmatech.morocco.ui.components.PulseButton
