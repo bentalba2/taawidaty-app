@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pharmatech.morocco.core.datastore.ThemeMode
-import com.pharmatech.morocco.core.utils.LanguagePreferenceManager
+import com.pharmatech.morocco.core.utils.LanguagePreference
 import com.pharmatech.morocco.features.profile.domain.model.GuestProfile
 import com.pharmatech.morocco.features.profile.domain.model.UserProfile
 import com.pharmatech.morocco.ui.components.ThemeToggleSegmented
