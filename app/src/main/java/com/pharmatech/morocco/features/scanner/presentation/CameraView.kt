@@ -239,7 +239,7 @@ private fun ScanningOverlay(
                     )
             ) {
                 Icon(
-                    imageVector = Icons.Default.FlashlightOff, // Placeholder - should be close icon
+                    imageVector = Icons.Default.Close,
                     contentDescription = "Close",
                     tint = Color.White
                 )
