@@ -212,7 +212,13 @@ data class HomeUiState(
     val takenCount: Int = 0,
     val remainingCount: Int = 0,
     val progress: Float = 0f,
-    val nextMedication: NextMedication? = null
+    val nextMedication: NextMedication? = null,
+    val currentLocation: LocationData? = null,
+    val nearbyPharmacies: List<NearbyPharmacy> = emptyList(),
+    val locationPermissionGranted: Boolean = false,
+    val locationEnabled: Boolean = false,
+    val isLoadingLocation: Boolean = false,
+    val locationError: String? = null
 )
 
 data class NextMedication(
@@ -221,32 +227,12 @@ data class NextMedication(
     val dosage: String
 )
 
-private fun List<MedicationSchedule>.toHomeUiState(): HomeUiState {
-    if (isEmpty()) {
-        return HomeUiState()
-    }
-
-    val total = size
-    val taken = count { it.isTaken }
-    val remaining = total - taken
-    val progressValue = if (total > 0) taken.toFloat() / total else 0f
-
-    val nextMedication = filterNot { it.isTaken }
-        .sortedBy { it.time }
-        .firstOrNull()
-        ?.let {
-            NextMedication(
-                name = it.medicationName,
-                time = it.time,
-                dosage = it.dosage
-            )
-        }
-
-    return HomeUiState(
-        totalMedications = total,
-        takenCount = taken,
-        remainingCount = remaining,
-        progress = progressValue,
-        nextMedication = nextMedication
-    )
-}
+data class NearbyPharmacy(
+    val id: String,
+    val name: String,
+    val address: String,
+    val distance: Float,
+    val latLng: LatLng,
+    val rating: Float,
+    val isOpen: Boolean
+)
