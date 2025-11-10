@@ -431,3 +431,23 @@ fun LanguageOption(
         }
     }
 }
+
+/**
+ * Apply language change to the current context
+ */
+private fun applyLanguageChange(context: Context, languageCode: String) {
+    val languagePreference = LanguagePreference(context)
+    val locale = languagePreference.getLocaleFromLanguageCode(languageCode)
+
+    Locale.setDefault(locale)
+    val config = Configuration(context.resources.configuration)
+    config.setLocale(locale)
+
+    @Suppress("DEPRECATION")
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
+
+    // Recreate the activity to apply changes
+    if (context is Activity) {
+        context.recreate()
+    }
+}
