@@ -25,6 +25,8 @@ import androidx.navigation.NavController
 import com.pharmatech.morocco.core.datastore.ThemeMode
 import com.pharmatech.morocco.core.utils.LanguagePreference
 import com.pharmatech.morocco.features.profile.domain.model.GuestProfile
+import java.util.Locale
+import android.content.res.Configuration
 import com.pharmatech.morocco.features.profile.domain.model.UserProfile
 import com.pharmatech.morocco.ui.components.ThemeToggleSegmented
 import com.pharmatech.morocco.ui.theme.ThemeViewModel
