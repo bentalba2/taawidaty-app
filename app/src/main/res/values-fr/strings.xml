@@ -105,4 +105,12 @@
     <string name="location_not_available">Position non disponible</string>
     <string name="no_dialer_app">Aucune application de composition trouvée</string>
     <string name="no_maps_app">Aucune application de cartes trouvée</string>
+
+    <!-- Splash Screen -->
+    <string name="app_tagline">Système de Pharmacie Premium</string>
+    <string name="loading_initializing">Initialisation de TaaWiDaTy...</string>
+    <string name="loading_permissions">Vérification des permissions...</string>
+    <string name="loading_database">Configuration de la base de données...</string>
+    <string name="loading_location">Configuration des services de localisation...</string>
+    <string name="loading_complete">Prêt!</string>
 </resources>
