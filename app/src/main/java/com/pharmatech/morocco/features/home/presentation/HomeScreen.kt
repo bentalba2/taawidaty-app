@@ -37,7 +37,15 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
+    val locationPermissionState = rememberLocationPermissionState()
+
+    // Handle location permission changes
+    LaunchedEffect(locationPermissionState.hasFineLocation, locationPermissionState.hasCoarseLocation) {
+        val granted = locationPermissionState.hasFineLocation || locationPermissionState.hasCoarseLocation
+        viewModel.onLocationPermissionResult(granted)
+    }
 
     Scaffold(
         topBar = {
