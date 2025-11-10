@@ -173,36 +173,39 @@ fun ProfileScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             LanguageOption(
                                 label = "🇬🇧 English",
-                                languageCode = LanguagePreferenceManager.LANGUAGE_ENGLISH,
+                                languageCode = LanguagePreference.LANGUAGE_ENGLISH,
                                 currentLanguage = currentLanguage,
-                                onClick = {
+                                onClick = { languageCode ->
                                     scope.launch {
-                                        languageManager.setLanguage(it)
-                                        (context as? Activity)?.recreate()
+                                        languageManager.setLanguage(languageCode)
+                                        // Apply language change immediately
+                                        applyLanguageChange(context, languageCode)
                                     }
                                 }
                             )
-                            
+
                             LanguageOption(
                                 label = "🇫🇷 Français",
-                                languageCode = LanguagePreferenceManager.LANGUAGE_FRENCH,
+                                languageCode = LanguagePreference.LANGUAGE_FRENCH,
                                 currentLanguage = currentLanguage,
-                                onClick = {
+                                onClick = { languageCode ->
                                     scope.launch {
-                                        languageManager.setLanguage(it)
-                                        (context as? Activity)?.recreate()
+                                        languageManager.setLanguage(languageCode)
+                                        // Apply language change immediately
+                                        applyLanguageChange(context, languageCode)
                                     }
                                 }
                             )
-                            
+
                             LanguageOption(
                                 label = "🇸🇦 العربية",
-                                languageCode = LanguagePreferenceManager.LANGUAGE_ARABIC,
+                                languageCode = LanguagePreference.LANGUAGE_ARABIC,
                                 currentLanguage = currentLanguage,
-                                onClick = {
+                                onClick = { languageCode ->
                                     scope.launch {
-                                        languageManager.setLanguage(it)
-                                        (context as? Activity)?.recreate()
+                                        languageManager.setLanguage(languageCode)
+                                        // Apply language change immediately
+                                        applyLanguageChange(context, languageCode)
                                     }
                                 }
                             )
