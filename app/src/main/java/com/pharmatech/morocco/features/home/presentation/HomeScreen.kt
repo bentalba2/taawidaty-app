@@ -551,8 +551,60 @@ fun HomeScreen(
     }
 }
 
+/**
+ * Enhanced Premium Quick Action Card with better touch feedback and animations
+ */
 @Composable
-fun QuickActionCard(
+private fun PremiumQuickActionCard(
+    title: String,
+    icon: ImageVector,
+    gradient: List<Color>,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    PremiumCard(
+        onClick = onClick,
+        modifier = modifier
+            .height(120.dp),
+        elevation = 8.dp
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Brush.horizontalGradient(gradient))
+                .padding(20.dp)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = Color.White.copy(alpha = 0.2f),
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(12.dp)
+                    )
+                }
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickActionCard(
     title: String,
     icon: ImageVector,
     gradient: List<androidx.compose.ui.graphics.Color>,
