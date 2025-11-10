@@ -9,9 +9,11 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.pharmatech.morocco.BuildConfig
 import com.pharmatech.morocco.core.database.PharmaTechDatabase
+import com.pharmatech.morocco.core.location.LocationService
 import com.pharmatech.morocco.core.network.ApiService
 import com.pharmatech.morocco.core.network.AuthInterceptor
 import com.pharmatech.morocco.core.utils.NetworkMonitor
+import com.pharmatech.morocco.features.scanner.domain.CameraService
 import com.pharmatech.morocco.features.tracker.data.repository.TrackerStateRepositoryImpl
 import com.pharmatech.morocco.features.tracker.domain.repository.TrackerStateRepository
 import dagger.Module
