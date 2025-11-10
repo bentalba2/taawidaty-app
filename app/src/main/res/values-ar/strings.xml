@@ -105,4 +105,12 @@
     <string name="location_not_available">الموقع غير متوفر</string>
     <string name="no_dialer_app">لم يتم العثور على تطبيق هاتف</string>
     <string name="no_maps_app">لم يتم العثور على تطبيق خرائط</string>
+
+    <!-- Splash Screen -->
+    <string name="app_tagline">نظام الصيدلية المتميز</string>
+    <string name="loading_initializing">جاري تهيئة تواصيداتي...</string>
+    <string name="loading_permissions">جاري فحص الأذونات...</string>
+    <string name="loading_database">جاري إعداد قاعدة البيانات...</string>
+    <string name="loading_location">جاري تهيئة خدمات الموقع...</string>
+    <string name="loading_complete">جاهز!</string>
 </resources>
