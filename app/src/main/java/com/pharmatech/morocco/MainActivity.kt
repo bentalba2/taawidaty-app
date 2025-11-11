@@ -10,8 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import com.pharmatech.morocco.core.utils.LanguagePreferenceManager
-import com.pharmatech.morocco.ui.theme.TaawidatyThemeProvider
+import com.pharmatech.morocco.core.utils.LanguagePreference
+import com.pharmatech.morocco.ui.theme.AppleThemeProviderWithManager
 import com.pharmatech.morocco.ui.navigation.PharmaTechNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
