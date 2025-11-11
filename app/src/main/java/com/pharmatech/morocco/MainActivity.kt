@@ -41,10 +41,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun applyLanguagePreference() {
-        val languagePreferenceManager = LanguagePreferenceManager(applicationContext)
+        val languagePreference = LanguagePreference(applicationContext)
         runBlocking {
-            val languageCode = languagePreferenceManager.getLanguage()
-            val locale = languagePreferenceManager.getLocaleFromLanguageCode(languageCode)
+            val languageCode = languagePreference.getLanguage()
+            val locale = languagePreference.getLocaleFromLanguageCode(languageCode)
 
             Locale.setDefault(locale)
             val config = Configuration(resources.configuration)
