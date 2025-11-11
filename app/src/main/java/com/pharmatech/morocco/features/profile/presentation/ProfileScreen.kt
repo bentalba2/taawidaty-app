@@ -16,23 +16,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.pharmatech.morocco.core.utils.LanguagePreferenceManager
+import com.pharmatech.morocco.R
+import com.pharmatech.morocco.core.datastore.ThemeMode
+import com.pharmatech.morocco.core.utils.LanguagePreference
 import com.pharmatech.morocco.features.profile.domain.model.GuestProfile
+import java.util.Locale
+import android.content.res.Configuration
 import com.pharmatech.morocco.features.profile.domain.model.UserProfile
+import com.pharmatech.morocco.ui.components.ThemeToggleSegmented
+import com.pharmatech.morocco.ui.theme.ThemeViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    themeViewModel: ThemeViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val languageManager = remember { LanguagePreferenceManager(context) }
-    val currentLanguage by languageManager.languageFlow.collectAsState(initial = LanguagePreferenceManager.LANGUAGE_FRENCH)
+    val languageManager = remember { LanguagePreference(context) }
+    val currentLanguage by languageManager.languageFlow.collectAsState(initial = LanguagePreference.LANGUAGE_FRENCH)
+    val currentThemeMode by themeViewModel.themeMode.collectAsState()
     
     var userProfile by remember { mutableStateOf(GuestProfile.create("Kénitra")) }
     var showCreateAccountDialog by remember { mutableStateOf(false) }
@@ -154,7 +166,7 @@ fun ProfileScreen(navController: NavController) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "🌐 Language / اللغة",
+                                text = "🌐 ${stringResource(id = R.string.language)}",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -164,41 +176,95 @@ fun ProfileScreen(navController: NavController) {
                         
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             LanguageOption(
-                                label = "🇬🇧 English",
-                                languageCode = LanguagePreferenceManager.LANGUAGE_ENGLISH,
+                                label = "🇬🇧 ${stringResource(id = R.string.language_english)}",
+                                languageCode = LanguagePreference.LANGUAGE_ENGLISH,
                                 currentLanguage = currentLanguage,
-                                onClick = {
+                                onClick = { languageCode ->
                                     scope.launch {
-                                        languageManager.setLanguage(it)
-                                        (context as? Activity)?.recreate()
+                                        languageManager.setLanguage(languageCode)
+                                        // Apply language change immediately
+                                        applyLanguageChange(context, languageCode)
                                     }
                                 }
                             )
-                            
+
                             LanguageOption(
-                                label = "🇫🇷 Français",
-                                languageCode = LanguagePreferenceManager.LANGUAGE_FRENCH,
+                                label = "🇫🇷 ${stringResource(id = R.string.language_french)}",
+                                languageCode = LanguagePreference.LANGUAGE_FRENCH,
                                 currentLanguage = currentLanguage,
-                                onClick = {
+                                onClick = { languageCode ->
                                     scope.launch {
-                                        languageManager.setLanguage(it)
-                                        (context as? Activity)?.recreate()
+                                        languageManager.setLanguage(languageCode)
+                                        // Apply language change immediately
+                                        applyLanguageChange(context, languageCode)
                                     }
                                 }
                             )
-                            
+
                             LanguageOption(
-                                label = "🇸🇦 العربية",
-                                languageCode = LanguagePreferenceManager.LANGUAGE_ARABIC,
+                                label = "🇸🇦 ${stringResource(id = R.string.language_arabic)}",
+                                languageCode = LanguagePreference.LANGUAGE_ARABIC,
                                 currentLanguage = currentLanguage,
-                                onClick = {
+                                onClick = { languageCode ->
                                     scope.launch {
-                                        languageManager.setLanguage(it)
-                                        (context as? Activity)?.recreate()
+                                        languageManager.setLanguage(languageCode)
+                                        // Apply language change immediately
+                                        applyLanguageChange(context, languageCode)
                                     }
                                 }
                             )
                         }
+                    }
+                }
+            }
+            
+            // Theme Settings Card
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Palette,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Apparence / المظهر",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        ThemeToggleSegmented(
+                            currentMode = currentThemeMode,
+                            onModeChange = { mode ->
+                                themeViewModel.setThemeMode(mode)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        Text(
+                            text = when (currentThemeMode) {
+                                ThemeMode.SYSTEM -> "Suit le thème de votre appareil"
+                                ThemeMode.LIGHT -> "Mode clair activé"
+                                ThemeMode.DARK -> "Mode sombre activé"
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        )
                     }
                 }
             }
@@ -365,5 +431,25 @@ fun LanguageOption(
                 )
             }
         }
+    }
+}
+
+/**
+ * Apply language change to the current context
+ */
+private fun applyLanguageChange(context: Context, languageCode: String) {
+    val languagePreference = LanguagePreference(context)
+    val locale = languagePreference.getLocaleFromLanguageCode(languageCode)
+
+    Locale.setDefault(locale)
+    val config = Configuration(context.resources.configuration)
+    config.setLocale(locale)
+
+    @Suppress("DEPRECATION")
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
+
+    // Recreate the activity to apply changes
+    if (context is Activity) {
+        context.recreate()
     }
 }

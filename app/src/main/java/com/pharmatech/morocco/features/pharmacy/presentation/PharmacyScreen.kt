@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pharmatech.morocco.ui.theme.ShifaaColors
 import com.pharmatech.morocco.ui.theme.HealthGreen
+import com.pharmatech.morocco.features.pharmacy.domain.model.KenitraPharmacyData
+import com.pharmatech.morocco.features.pharmacy.domain.model.RabatPharmacyData
+import android.util.Log
 
 data class Pharmacy(
     val id: String,
@@ -43,65 +47,45 @@ fun PharmacyScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
     var showFilters by remember { mutableStateOf(false) }
     var selectedFilter by remember { mutableStateOf("All") }
+    var selectedCity by remember { mutableStateOf("All Cities") }
 
+    // Load real pharmacy data from both Kénitra and Rabat
     val mockPharmacies = remember {
-        listOf(
+        Log.d("PharmacyScreen", "Loading pharmacy data...")
+        
+        // Load Kénitra pharmacies
+        val kenitraData = KenitraPharmacyData.getAllPharmacies()
+        Log.d("PharmacyScreen", "Loaded ${kenitraData.size} pharmacies from Kénitra")
+        
+        // Load Rabat pharmacies
+        val rabatData = RabatPharmacyData.getAllPharmacies()
+        Log.d("PharmacyScreen", "Loaded ${rabatData.size} pharmacies from Rabat")
+        
+        // Combine both datasets
+        val allPharmacies = (kenitraData + rabatData)
+        Log.d("PharmacyScreen", "Total combined pharmacies: ${allPharmacies.size}")
+        
+        // Convert to PharmacyScreen's Pharmacy format
+        allPharmacies.filter { it.geocoded }.map { pharmacy ->
             Pharmacy(
-                id = "1",
-                name = "Pharmacie du Centre",
-                address = "12 Avenue Mohammed V",
-                city = "Casablanca",
-                phone = "+212 522 123 456",
-                isOpen = true,
-                isOnCall = true,
-                distance = 0.5,
-                rating = 4.5f
-            ),
-            Pharmacy(
-                id = "2",
-                name = "Pharmacie Al Amal",
-                address = "34 Rue de la Liberté",
-                city = "Casablanca",
-                phone = "+212 522 234 567",
-                isOpen = true,
-                isOnCall = false,
-                distance = 1.2,
-                rating = 4.8f
-            ),
-            Pharmacy(
-                id = "3",
-                name = "Pharmacie de Nuit",
-                address = "78 Boulevard Zerktouni",
-                city = "Casablanca",
-                phone = "+212 522 345 678",
-                isOpen = true,
-                isOnCall = true,
-                distance = 2.1,
-                rating = 4.3f
-            ),
-            Pharmacy(
-                id = "4",
-                name = "Pharmacie Salam",
-                address = "56 Rue Allal Ben Abdellah",
-                city = "Rabat",
-                phone = "+212 537 456 789",
-                isOpen = false,
-                isOnCall = false,
-                distance = 3.5,
-                rating = 4.6f
-            ),
-            Pharmacy(
-                id = "5",
-                name = "Pharmacie Atlas",
-                address = "23 Avenue Hassan II",
-                city = "Marrakech",
-                phone = "+212 524 567 890",
-                isOpen = true,
-                isOnCall = false,
-                distance = 4.2,
-                rating = 4.7f
+                id = pharmacy.id,
+                name = pharmacy.name,
+                address = pharmacy.address,
+                city = pharmacy.city,
+                phone = pharmacy.phoneNumber,
+                isOpen = true,  // Assume open (we don't have real-time data)
+                isOnCall = pharmacy.isGuardPharmacy,
+                distance = pharmacy.distance ?: 0.0,
+                rating = pharmacy.rating.toFloat()
             )
-        )
+        }
+    }
+    
+    Log.d("PharmacyScreen", "Displaying ${mockPharmacies.size} pharmacies")
+    
+    // Get unique cities for filter
+    val cities = remember {
+        listOf("All Cities") + mockPharmacies.map { it.city }.distinct().sorted()
     }
 
     val filteredPharmacies = mockPharmacies.filter { pharmacy ->
@@ -113,7 +97,8 @@ fun PharmacyScreen(navController: NavController) {
             "On Call" -> pharmacy.isOnCall
             else -> true
         }
-        matchesSearch && matchesFilter
+        val matchesCity = selectedCity == "All Cities" || pharmacy.city == selectedCity
+        matchesSearch && matchesFilter && matchesCity
     }
 
     Scaffold(
@@ -137,7 +122,9 @@ fun PharmacyScreen(navController: NavController) {
                             tint = if (showFilters) ShifaaColors.Gold else MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    IconButton(onClick = { /* TODO: Map view */ }) {
+                    IconButton(onClick = { 
+                        navController.navigate("pharmacy_map")
+                    }) {
                         Icon(Icons.Default.Map, contentDescription = "Map")
                     }
                 },
@@ -175,36 +162,64 @@ fun PharmacyScreen(navController: NavController) {
             )
 
             if (showFilters) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    FilterChip(
-                        selected = selectedFilter == "All",
-                        onClick = { selectedFilter = "All" },
-                        label = { Text("All") },
-                        leadingIcon = if (selectedFilter == "All") {
-                            { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                        } else null
+                    // Status filters
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        FilterChip(
+                            selected = selectedFilter == "All",
+                            onClick = { selectedFilter = "All" },
+                            label = { Text("All") },
+                            leadingIcon = if (selectedFilter == "All") {
+                                { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                            } else null
+                        )
+                        FilterChip(
+                            selected = selectedFilter == "Open",
+                            onClick = { selectedFilter = "Open" },
+                            label = { Text("Open") },
+                            leadingIcon = if (selectedFilter == "Open") {
+                                { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                            } else null
+                        )
+                        FilterChip(
+                            selected = selectedFilter == "On Call",
+                            onClick = { selectedFilter = "On Call" },
+                            label = { Text("On Call") },
+                            leadingIcon = if (selectedFilter == "On Call") {
+                                { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                            } else null
+                        )
+                    }
+                    
+                    // City filter - scrollable row
+                    Text(
+                        "Filter by City:",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
-                    FilterChip(
-                        selected = selectedFilter == "Open",
-                        onClick = { selectedFilter = "Open" },
-                        label = { Text("Open") },
-                        leadingIcon = if (selectedFilter == "Open") {
-                            { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                        } else null
-                    )
-                    FilterChip(
-                        selected = selectedFilter == "On Call",
-                        onClick = { selectedFilter = "On Call" },
-                        label = { Text("On Call") },
-                        leadingIcon = if (selectedFilter == "On Call") {
-                            { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                        } else null
-                    )
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(cities.size) { index ->
+                            val city = cities[index]
+                            FilterChip(
+                                selected = selectedCity == city,
+                                onClick = { selectedCity = city },
+                                label = { Text(city) },
+                                leadingIcon = if (selectedCity == city) {
+                                    { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                                } else null
+                            )
+                        }
+                    }
                 }
             }
 

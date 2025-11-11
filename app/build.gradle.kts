@@ -39,7 +39,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0.0-taawidaty"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
@@ -184,10 +184,30 @@ dependencies {
     // Google Maps Compose
     implementation("com.google.maps.android:maps-compose:4.3.0")
 
+    // Camera functionality for scanner
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
+    implementation("androidx.camera:camera-extensions:1.3.1")
+
     // ML Kit
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
     implementation("com.google.mlkit:text-recognition:16.0.0")
     implementation("com.google.mlkit:image-labeling:17.0.8")
+
+    // Enhanced UI and animations
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
+    implementation("com.github.skydoves:landscapist-glide:2.2.8")
+
+    // AI Integration Libraries
+    implementation("com.aallam.openai:openai-client:3.6.2")
+    implementation("io.ktor:ktor-client-android:2.3.8")
+    implementation("io.ktor:ktor-client-logging:2.3.8")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.8")
+
+    // Enhanced animations
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
 
     // AR Core
     implementation("com.google.ar:core:1.41.0")

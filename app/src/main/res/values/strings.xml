@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PharmaTech Morocco</string>
+    <string name="app_name">TAAWIDATY</string>
 
     <!-- Common -->
     <string name="ok">OK</string>
@@ -105,4 +105,12 @@
     <string name="location_not_available">Location not available</string>
     <string name="no_dialer_app">No dialer app found</string>
     <string name="no_maps_app">No maps app found</string>
+
+    <!-- Splash Screen -->
+    <string name="app_tagline">Premium Pharmacy Management System</string>
+    <string name="loading_initializing">Initializing TaaWiDaTy...</string>
+    <string name="loading_permissions">Checking permissions...</string>
+    <string name="loading_database">Setting up database...</string>
+    <string name="loading_location">Configuring location services...</string>
+    <string name="loading_complete">Ready!</string>
 </resources>

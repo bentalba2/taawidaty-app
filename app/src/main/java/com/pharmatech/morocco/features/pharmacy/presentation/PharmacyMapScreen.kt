@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,14 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import android.util.Log
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import androidx.navigation.NavController
 import com.pharmatech.morocco.features.pharmacy.domain.model.PharmacyData
+import com.pharmatech.morocco.features.pharmacy.domain.model.KenitraPharmacyData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PharmacyMapScreen(modifier: Modifier = Modifier) {
+fun PharmacyMapScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController? = null
+) {
     val context = LocalContext.current
     var hasLocationPermission by remember {
         mutableStateOf(
@@ -36,17 +43,28 @@ fun PharmacyMapScreen(modifier: Modifier = Modifier) {
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         hasLocationPermission = isGranted
-    }
-
-    // Launch permission request on first composition
-    LaunchedEffect(Unit) {
-        if (!hasLocationPermission) {
-            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (isGranted) {
+            Log.d("PharmacyMap", "Location permission granted")
+        } else {
+            Log.d("PharmacyMap", "Location permission denied")
         }
     }
 
-    val pharmacies = remember { PharmacyData.getAllPharmacies() }
-    val kenitiraPharmacy = pharmacies.first()
+    // Don't auto-request on first composition - let user click the button
+    // LaunchedEffect removed to give user control
+
+    val pharmacies = remember { 
+        PharmacyData.getAllPharmacies() + KenitraPharmacyData.getAllPharmacies()
+    }
+    
+    // Debug logging
+    Log.d("PharmacyMap", "Total pharmacies loaded: ${pharmacies.size}")
+    Log.d("PharmacyMap", "PharmacyData count: ${PharmacyData.getAllPharmacies().size}")
+    Log.d("PharmacyMap", "KenitraPharmacyData count: ${KenitraPharmacyData.getAllPharmacies().size}")
+    Log.d("PharmacyMap", "Geocoded count: ${pharmacies.count { it.geocoded }}")
+    
+    val kenitiraPharmacy = KenitraPharmacyData.getAllPharmacies().firstOrNull { it.geocoded } 
+        ?: pharmacies.first()
     
     // Camera position centered on Kenitra pharmacy
     val cameraPositionState = rememberCameraPositionState {
@@ -61,6 +79,13 @@ fun PharmacyMapScreen(modifier: Modifier = Modifier) {
         topBar = {
             TopAppBar(
                 title = { Text("Pharmacies Près de Vous") },
+                navigationIcon = {
+                    if (navController != null) {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -96,8 +121,8 @@ fun PharmacyMapScreen(modifier: Modifier = Modifier) {
                         myLocationButtonEnabled = false
                     )
                 ) {
-                    // Add marker for each pharmacy
-                    pharmacies.forEach { pharmacy ->
+                    // Add markers for all pharmacies (PharmacyData + Kenitra real data)
+                    pharmacies.filter { it.geocoded }.forEach { pharmacy ->
                         Marker(
                             state = MarkerState(
                                 position = LatLng(pharmacy.latitude, pharmacy.longitude)
