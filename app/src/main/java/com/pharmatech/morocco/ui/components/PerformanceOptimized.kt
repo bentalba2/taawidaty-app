@@ -1,5 +1,6 @@
 package com.pharmatech.morocco.ui.components
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
